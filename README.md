@@ -47,8 +47,8 @@ plugins {
 After applying the plugin, the following takes place:
 
 1. New directories are created (if missing):
-    * **src/it/java** - source set for integration tests (additionally marked as test source root in IntelliJ IDEA)
-    * **src/it/resources** - resources for integration tests
+    * **src/it/java** - source set directory for integration tests (additionally marked as test source root in IntelliJ IDEA)
+    * **src/it/resources** - resources directory for integration tests
 2. Gradle configurations are added:
     * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
     * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
@@ -56,12 +56,12 @@ After applying the plugin, the following takes place:
 
 ## Configuration
 
-Currently the following configuration supported
+Currently the following configuration parameters supported
 
 ```gradle
 it {
-    srcDir = 'src/it/java' // custom integration test source set directory
-    resourcesDir = "src/it/resources" // custom integration test resources directory
+    srcDir = 'src/it/java' // integration test source set directory
+    resourcesDir = "src/it/resources" // integration test resources directory
 
     options {
         maxParallelForks = 4 // maximum number of forks for integration tests execution
