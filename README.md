@@ -19,7 +19,7 @@
 
 Build script snippet for use in all Gradle versions:
 
-```
+```gradle
 buildscript {
   repositories {
     maven {
@@ -36,7 +36,7 @@ apply plugin: "com.scalified.plugins.gradle.it"
 
 Build script snippet for new, incubating, plugin mechanism introduced in Gradle 2.1:
 
-```
+```gradle
 plugins {
   id "com.scalified.plugins.gradle.it" version "0.1"
 }
@@ -47,18 +47,18 @@ plugins {
 After applying the plugin, the following takes place:
 
 1. New directories are created (if missing):
-  * **src/it/java** - source set for integration tests (additionally marked as test source root in IntelliJ IDEA)
-  * **src/it/resources** - resources for integration tests
+    * **src/it/java** - source set for integration tests (additionally marked as test source root in IntelliJ IDEA)
+    * **src/it/resources** - resources for integration tests
 2. Gradle configurations are added:
-  * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
-  * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
+    * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
+    * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
 3. Gradle **it** task created, which runs integration tests located in integration test source set
 
 ## Configuration
 
 Currently the following configuration supported
 
-```
+```gradle
 it {
     srcDir = 'src/it/java' // custom integration test source set directory
     resourcesDir = "src/it/resources" // custom integration test resources directory
