@@ -58,17 +58,17 @@ class ItPlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 		this.project = project
-		if (project.plugins.hasPlugin(JavaPlugin)) {
-			this.extension = project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
-			project.afterEvaluate { p ->
+		project.afterEvaluate { p ->
+			if (p.plugins.hasPlugin(JavaPlugin)) {
+				this.extension = p.extensions.create(ItPluginExtension.NAME, ItPluginExtension, p)
 				createMissingDirectories()
 				createItCompileConfiguration()
 				createItRuntimeConfiguration()
 				def sourceSet = createItSourceSet()
 				createItTask(sourceSet)
+			} else {
+				LOGGER.warn("Failed to apply integration plugin. Java plugin must be applied first")
 			}
-		} else {
-			LOGGER.warn("Failed to apply integration plugin. Java plugin must be applied first")
 		}
 	}
 
