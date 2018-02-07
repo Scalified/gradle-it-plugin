@@ -1,15 +1,29 @@
 # 0.1
 
-1. Initial release. Basic functionality:
+## Initial release. Basic functionality
+
   * Integration test directories initialization
   * Integration test task
   * A few configuration test options
 
 # 0.1.1
 
-1. Fixed plugin not applying issue
+## Fixes:
+
+1. Issue when plugin is not applying
 
 # 0.1.2
 
-1. Fixed task loading issue
-2. Added JavaPlugin automatically applying if not applied
+## Fixes
+
+1. Task loading issue
+
+## New functionality
+
+1. Added JavaPlugin automatically applying if not applied
+
+# 0.1.3
+
+## New functionality
+
+1. Added check whether IdeaPlugin is already applied

@@ -65,7 +65,7 @@ class ItPlugin implements Plugin<Project> {
 		this.task = project.tasks.create(ItTask.NAME, ItTask)
 		if (!project.plugins.hasPlugin(JavaPlugin)) {
 			LOGGER.warn("Java plugin not applied. Applying Java plugin")
-			project.getPluginManager().apply(JavaPlugin)
+			project.plugins.apply(JavaPlugin)
 		}
 		project.afterEvaluate { p ->
 			createMissingDirectories()
@@ -112,7 +112,10 @@ class ItPlugin implements Plugin<Project> {
 		sourceSet.java.setSrcDirs(project.files(extension.srcDir))
 		sourceSet.resources.setSrcDirs(project.files(extension.resourcesDir))
 
-		project.getPluginManager().apply(IdeaPlugin)
+		if (!project.plugins.hasPlugin(IdeaPlugin)) {
+			LOGGER.debug("Applying IDEA plugin")
+			project.plugins.apply(IdeaPlugin)
+		}
 		def ideaModule = project.idea.module as IdeaModule
 		ideaModule.testSourceDirs += project.file(extension.srcDir)
 

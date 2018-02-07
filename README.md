@@ -27,7 +27,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.2"
+    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.3"
   }
 }
 
@@ -38,7 +38,7 @@ Build script snippet for new, incubating, plugin mechanism introduced in Gradle 
 
 ```gradle
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.2"
+  id "com.scalified.plugins.gradle.it" version "0.1.3"
 }
 ```
 
