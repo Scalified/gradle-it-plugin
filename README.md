@@ -27,7 +27,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.1"
+    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.2"
   }
 }
 
@@ -38,7 +38,7 @@ Build script snippet for new, incubating, plugin mechanism introduced in Gradle 
 
 ```gradle
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.1"
+  id "com.scalified.plugins.gradle.it" version "0.1.2"
 }
 ```
 
@@ -46,17 +46,18 @@ plugins {
 
 After applying the plugin, the following takes place:
 
-1. New directories are created (if missing):
+1. JavaPlugin applied if not yet applied
+2. New directories are created (if missing):
     * **src/it/java** - source set directory for integration tests (additionally marked as test source root in IntelliJ IDEA)
     * **src/it/resources** - resources directory for integration tests
-2. Gradle configurations are added:
+3. Gradle configurations are added:
     * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
     * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
-3. Gradle **it** task created, which runs integration tests located in integration test source set
+4. Gradle **it** task created, which runs integration tests located in integration test source set
 
 ## Configuration
 
-Currently the following configuration parameters supported
+Currently the following configuration parameters supported:
 
 ```gradle
 it {
@@ -68,6 +69,8 @@ it {
         maxHeapSize = '256m' // maximum size of a heap for integration tests execution
     }
 }
+
+tasks.it.finalizedBy(cleanDb) // assuming there is some 'cleanDb' task
 ```
 
 If you need more configuration options, you may <a href="mailto:info@scalified.com?subject=[Gradle Integration Test Plugin]: Proposals And Suggestions">send a request</a> with description

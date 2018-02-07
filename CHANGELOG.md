@@ -7,4 +7,9 @@
 
 # 0.1.1
 
-Fixed plugin not applying issue
+1. Fixed plugin not applying issue
+
+# 0.1.2
+
+1. Fixed task loading issue
+2. Added JavaPlugin automatically applying if not applied

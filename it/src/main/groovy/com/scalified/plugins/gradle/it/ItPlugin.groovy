@@ -31,6 +31,7 @@ import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.testing.Test
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.plugins.ide.idea.model.IdeaModule
 import org.slf4j.Logger
@@ -55,20 +56,23 @@ class ItPlugin implements Plugin<Project> {
 
 	private ItPluginExtension extension
 
+	private Task task
+
 	@Override
 	void apply(Project project) {
 		this.project = project
+		this.extension = project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
+		this.task = project.tasks.create(ItTask.NAME, ItTask)
+		if (!project.plugins.hasPlugin(JavaPlugin)) {
+			LOGGER.warn("Java plugin not applied. Applying Java plugin")
+			project.getPluginManager().apply(JavaPlugin)
+		}
 		project.afterEvaluate { p ->
-			if (p.plugins.hasPlugin(JavaPlugin)) {
-				this.extension = p.extensions.create(ItPluginExtension.NAME, ItPluginExtension, p)
-				createMissingDirectories()
-				createItCompileConfiguration()
-				createItRuntimeConfiguration()
-				def sourceSet = createItSourceSet()
-				createItTask(sourceSet)
-			} else {
-				LOGGER.warn("Failed to apply integration plugin. Java plugin must be applied first")
-			}
+			createMissingDirectories()
+			createItCompileConfiguration()
+			createItRuntimeConfiguration()
+			def sourceSet = createItSourceSet()
+			configureTask(sourceSet)
 		}
 	}
 
@@ -116,15 +120,12 @@ class ItPlugin implements Plugin<Project> {
 		sourceSet
 	}
 
-	def createItTask(SourceSet sourceSet) {
-		def task = project.tasks.create(ItTask.NAME, ItTask)
-		task.group = 'verification'
-		task.description = 'Executes integration tests'
+	def configureTask(SourceSet sourceSet) {
 		populateTaskProperties(task, extension.optionsExtension)
+		LOGGER.info("TASK HEAP = ${(task as Test).maxHeapSize}")
 		task.dependsOn(project.tasks.findByName('itClasses'))
 		task.classpath = sourceSet.runtimeClasspath
 		task.testClassesDirs = sourceSet.output.classesDirs
-		project.tasks.add(task)
 		LOGGER.trace("Integration test '${ItTask.NAME}' task created")
 	}
 

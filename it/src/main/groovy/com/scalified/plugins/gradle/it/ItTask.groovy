@@ -36,4 +36,13 @@ class ItTask extends Test {
 
 	public static final String NAME = 'it'
 
+	public static final String GROUP = 'verification'
+
+	public static final String DESCRIPTION = 'Runs the integration tests'
+
+	ItTask() {
+		group = GROUP
+		description = DESCRIPTION
+	}
+
 }

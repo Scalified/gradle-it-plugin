@@ -25,6 +25,7 @@
 
 package com.scalified.plugins.gradle.it
 
+import groovy.transform.PackageScope
 import org.gradle.api.Project
 
 /**
@@ -39,6 +40,7 @@ class ItPluginExtension {
 	String srcDir = 'src/it/java'
 	String resourcesDir = "src/it/resources"
 
+	@PackageScope
 	OptionsExtension optionsExtension = new OptionsExtension()
 
 	private Project project
@@ -49,10 +51,6 @@ class ItPluginExtension {
 
 	OptionsExtension options(Closure closure) {
 		optionsExtension = project.configure(new OptionsExtension(), closure) as OptionsExtension
-	}
-
-	OptionsExtension getOptions() {
-		optionsExtension
 	}
 
 }
