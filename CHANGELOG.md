@@ -27,3 +27,10 @@
 ## New functionality
 
 1. Added check whether IdeaPlugin is already applied
+
+# 0.1.4
+
+## Fixes
+
+1. Fixed configurations initialization during source set creation
+2. Fixed source set not extending from main and test

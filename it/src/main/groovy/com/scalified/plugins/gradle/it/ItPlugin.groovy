@@ -44,10 +44,6 @@ import org.slf4j.LoggerFactory
  */
 class ItPlugin implements Plugin<Project> {
 
-	public static final String COMPILE_CONFIGURATION_NAME = 'itCompile'
-
-	public static final String RUNTIME_CONFIGURATION_NAME = 'itRuntime'
-
 	public static final String SOURCE_SET_NAME = 'it'
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItPlugin)
@@ -58,21 +54,22 @@ class ItPlugin implements Plugin<Project> {
 
 	private Task task
 
+	private SourceSet sourceSet
+
 	@Override
 	void apply(Project project) {
 		this.project = project
 		this.extension = project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
 		this.task = project.tasks.create(ItTask.NAME, ItTask)
+		this.sourceSet = project.sourceSets.create(SOURCE_SET_NAME)
 		if (!project.plugins.hasPlugin(JavaPlugin)) {
 			LOGGER.warn("Java plugin not applied. Applying Java plugin")
 			project.plugins.apply(JavaPlugin)
 		}
 		project.afterEvaluate { p ->
 			createMissingDirectories()
-			createItCompileConfiguration()
-			createItRuntimeConfiguration()
-			def sourceSet = createItSourceSet()
-			configureTask(sourceSet)
+			configureSourceSet()
+			configureTask()
 		}
 	}
 
@@ -88,29 +85,22 @@ class ItPlugin implements Plugin<Project> {
 		create(extension.resourcesDir)
 	}
 
-	def createItCompileConfiguration() {
-		def compileConfiguration = project.configurations.create(COMPILE_CONFIGURATION_NAME)
-		compileConfiguration.extendsFrom(project.configurations.getByName('testCompile'))
-		LOGGER.trace("Integration test compile configuration '$COMPILE_CONFIGURATION_NAME' created")
-		compileConfiguration
-	}
-
-	def createItRuntimeConfiguration() {
-		def runtimeConfiguration = project.configurations.create(RUNTIME_CONFIGURATION_NAME)
-		runtimeConfiguration.extendsFrom(project.configurations.getByName('testRuntime'))
-		LOGGER.trace("Integration test runtime configuration '$RUNTIME_CONFIGURATION_NAME' created")
-		runtimeConfiguration
-	}
-
-	def createItSourceSet() {
+	def configureSourceSet() {
 		def sourceSets = project.sourceSets as SourceSetContainer
-		def sourceSet = sourceSets.create(SOURCE_SET_NAME)
 		def mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
 		def testSourceSet = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+
 		sourceSet.compileClasspath += mainSourceSet.output + testSourceSet.output
 		sourceSet.runtimeClasspath += mainSourceSet.output + testSourceSet.output
+
 		sourceSet.java.setSrcDirs(project.files(extension.srcDir))
 		sourceSet.resources.setSrcDirs(project.files(extension.resourcesDir))
+
+		project.configurations.getByName(sourceSet.compileConfigurationName)
+				.extendsFrom(project.configurations.getByName(testSourceSet.compileConfigurationName))
+
+		project.configurations.getByName(sourceSet.runtimeConfigurationName)
+				.extendsFrom(project.configurations.getByName(testSourceSet.runtimeConfigurationName))
 
 		if (!project.plugins.hasPlugin(IdeaPlugin)) {
 			LOGGER.debug("Applying IDEA plugin")
@@ -120,10 +110,9 @@ class ItPlugin implements Plugin<Project> {
 		ideaModule.testSourceDirs += project.file(extension.srcDir)
 
 		LOGGER.trace("Integration test source set '$SOURCE_SET_NAME' created")
-		sourceSet
 	}
 
-	def configureTask(SourceSet sourceSet) {
+	def configureTask() {
 		populateTaskProperties(task, extension.optionsExtension)
 		LOGGER.info("TASK HEAP = ${(task as Test).maxHeapSize}")
 		task.dependsOn(project.tasks.findByName('itClasses'))
