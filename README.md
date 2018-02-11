@@ -9,7 +9,7 @@
 ## Requirements
 
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-* [Gradle](https://gradle.org/)
+* [Gradle 4+](https://gradle.org/)
 
 ## Changelog
 
