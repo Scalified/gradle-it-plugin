@@ -17,7 +17,15 @@
 
 ## Applying
 
-Build script snippet for use in all Gradle versions:
+Build script snippet for plugins DSL for Gradle 2.1 and later:
+
+```gradle
+plugins {
+  id "com.scalified.plugins.gradle.it" version "0.1.4"
+}
+```
+
+Build script snippet for use in older Gradle versions or where dynamic configuration is required:
 
 ```gradle
 buildscript {
@@ -34,40 +42,33 @@ buildscript {
 apply plugin: "com.scalified.plugins.gradle.it"
 ```
 
-Build script snippet for new, incubating, plugin mechanism introduced in Gradle 2.1:
-
-```gradle
-plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.4"
-}
-```
-
 ## Usage
 
 After applying the plugin, the following takes place:
 
 1. JavaPlugin applied if not yet applied
 2. New directories are created (if missing):
-    * **src/it/java** - source set directory for integration tests (additionally marked as test source root in IntelliJ IDEA)
-    * **src/it/resources** - resources directory for integration tests
-3. Gradle configurations are added:
-    * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
-    * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
-4. Gradle **it** task created, which runs integration tests located in integration test source set
+   * Source set directory for integration tests (the value of **it.srcDir** property, which is **src/it/java** by default)
+   * Resources directory for integration tests (the value of **it.resourcesDir** property, which is **src/it/resources** by default)
+3. Source set directory for integration tests marked as generated source directory (IntelliJ IDEA only)
+4. Gradle configurations added:
+   * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
+   * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
+5. Gradle **it** task created, which runs integration tests located in integration test source set
 
 ## Configuration
 
-Currently the following configuration parameters supported:
+Currently the following configuration parameters supported (default values are shown):
 
 ```gradle
 it {
-    srcDir = 'src/it/java' // integration test source set directory
-    resourcesDir = "src/it/resources" // integration test resources directory
+  srcDir = 'src/it/java' // integration test source set directory
+  resourcesDir = "src/it/resources" // integration test resources directory
 
-    options {
-        maxParallelForks = 4 // maximum number of forks for integration tests execution
-        maxHeapSize = '256m' // maximum size of a heap for integration tests execution
-    }
+  options {
+    maxParallelForks = 4 // maximum number of forks for integration tests execution
+    maxHeapSize = '256m' // maximum size of a heap for integration tests execution
+  }
 }
 
 tasks.it.finalizedBy(cleanDb) // assuming there is some 'cleanDb' task
