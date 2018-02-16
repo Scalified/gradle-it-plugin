@@ -25,6 +25,7 @@
 
 package com.scalified.plugins.gradle.it
 
+import groovy.transform.PackageScope
 import org.gradle.api.tasks.testing.Test
 
 /**
@@ -34,11 +35,14 @@ import org.gradle.api.tasks.testing.Test
  */
 class ItTask extends Test {
 
-	public static final String NAME = 'it'
+	@PackageScope
+	static final String NAME = 'it'
 
-	public static final String GROUP = 'verification'
+	@PackageScope
+	static final String GROUP = 'verification'
 
-	public static final String DESCRIPTION = 'Runs the integration tests'
+	@PackageScope
+	static final String DESCRIPTION = 'Runs the integration tests'
 
 	ItTask() {
 		group = GROUP

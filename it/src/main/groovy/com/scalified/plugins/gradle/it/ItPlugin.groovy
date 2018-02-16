@@ -25,12 +25,12 @@
 
 package com.scalified.plugins.gradle.it
 
+import groovy.transform.PackageScope
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.testing.Test
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.plugins.ide.idea.model.IdeaModule
@@ -44,84 +44,102 @@ import org.slf4j.LoggerFactory
  */
 class ItPlugin implements Plugin<Project> {
 
-	public static final String SOURCE_SET_NAME = 'it'
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItPlugin)
 
+	@PackageScope
+	static final String SOURCE_SET_NAME = 'it'
+
 	private Project project
-
-	private ItPluginExtension extension
-
-	private Task task
-
-	private SourceSet sourceSet
 
 	@Override
 	void apply(Project project) {
 		this.project = project
-		this.extension = project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
-		this.task = project.tasks.create(ItTask.NAME, ItTask)
-		this.sourceSet = project.sourceSets.create(SOURCE_SET_NAME)
+
 		if (!project.plugins.hasPlugin(JavaPlugin)) {
-			LOGGER.warn("Java plugin not applied. Applying Java plugin")
+			LOGGER.debug("Applied Java plugin")
 			project.plugins.apply(JavaPlugin)
 		}
-		project.afterEvaluate { p ->
-			createMissingDirectories()
-			configureSourceSet()
-			configureTask()
+
+		project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
+		LOGGER.debug("Created $ItPluginExtension.NAME extension")
+
+		project.tasks.create(ItTask.NAME, ItTask)
+		LOGGER.debug("Created $ItTask.NAME task")
+
+		project.sourceSets.create(SOURCE_SET_NAME)
+		LOGGER.debug("Created $SOURCE_SET_NAME source set")
+
+		project.afterEvaluate {
+			def extension = project.extensions.getByType(ItPluginExtension)
+			createDirectories(extension)
+			configureSourceSet(extension)
+			configureConfiguration()
+			configureTask(extension)
 		}
 	}
 
-	def createMissingDirectories() {
+	private def createDirectories(ItPluginExtension extension) {
 		def create = { path ->
 			def dir = project.file(path)
 			if (!dir.exists()) {
 				dir.mkdirs()
-				LOGGER.debug("Directory ${dir.absolutePath} created")
+				LOGGER.debug("Created ${dir.absolutePath} directory")
 			}
 		}
 		create(extension.srcDir)
 		create(extension.resourcesDir)
+
+		if (!project.plugins.hasPlugin(IdeaPlugin)) {
+			project.plugins.apply(IdeaPlugin)
+			LOGGER.debug("Applied IDEA plugin")
+		}
+		def ideaModule = project.idea.module as IdeaModule
+		ideaModule.testSourceDirs += project.file(extension.srcDir)
 	}
 
-	def configureSourceSet() {
-		def sourceSets = project.sourceSets as SourceSetContainer
-		def mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-		def testSourceSet = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+	private def configureSourceSet(ItPluginExtension extension) {
+		def sourceSet = project.sourceSets[SOURCE_SET_NAME] as SourceSet
+
+		def mainSourceSet = project.sourceSets[SourceSet.MAIN_SOURCE_SET_NAME] as SourceSet
+		def testSourceSet = project.sourceSets[SourceSet.TEST_SOURCE_SET_NAME] as SourceSet
 
 		sourceSet.compileClasspath += mainSourceSet.output + testSourceSet.output
 		sourceSet.runtimeClasspath += mainSourceSet.output + testSourceSet.output
 
 		sourceSet.java.setSrcDirs(project.files(extension.srcDir))
 		sourceSet.resources.setSrcDirs(project.files(extension.resourcesDir))
+		LOGGER.debug("Configured $SOURCE_SET_NAME source set")
+	}
+
+	private def configureConfiguration() {
+		def sourceSet = project.sourceSets[SOURCE_SET_NAME] as SourceSet
+		def testSourceSet = project.sourceSets[SourceSet.TEST_SOURCE_SET_NAME] as SourceSet
 
 		project.configurations.getByName(sourceSet.compileConfigurationName)
 				.extendsFrom(project.configurations.getByName(testSourceSet.compileConfigurationName))
+		LOGGER.debug("Configured $sourceSet.compileConfigurationName configuration")
 
 		project.configurations.getByName(sourceSet.runtimeConfigurationName)
 				.extendsFrom(project.configurations.getByName(testSourceSet.runtimeConfigurationName))
-
-		if (!project.plugins.hasPlugin(IdeaPlugin)) {
-			LOGGER.debug("Applying IDEA plugin")
-			project.plugins.apply(IdeaPlugin)
-		}
-		def ideaModule = project.idea.module as IdeaModule
-		ideaModule.testSourceDirs += project.file(extension.srcDir)
-
-		LOGGER.trace("Integration test source set '$SOURCE_SET_NAME' created")
+		LOGGER.debug("Configured $sourceSet.runtimeConfigurationName configuration")
 	}
 
-	def configureTask() {
+	private def configureTask(ItPluginExtension extension) {
+		def task = project.tasks[ItTask.NAME] as ItTask
+
 		populateTaskProperties(task, extension.optionsExtension)
+
 		LOGGER.info("TASK HEAP = ${(task as Test).maxHeapSize}")
+
 		task.dependsOn(project.tasks.findByName('itClasses'))
+
+		def sourceSet = project.sourceSets[SOURCE_SET_NAME] as SourceSet
 		task.classpath = sourceSet.runtimeClasspath
 		task.testClassesDirs = sourceSet.output.classesDirs
-		LOGGER.trace("Integration test '${ItTask.NAME}' task created")
+		LOGGER.trace("Created and configured '${ItTask.NAME}' task")
 	}
 
-	static def populateTaskProperties(Task task, OptionsExtension extension) {
+	private static def populateTaskProperties(Task task, OptionsExtension extension) {
 		OptionsExtension.declaredFields.findAll { !it.synthetic } collect { it.name } each { key ->
 			if (task.hasProperty(key)) {
 				def value = extension.properties[key]
