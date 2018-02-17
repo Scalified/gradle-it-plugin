@@ -35,15 +35,17 @@ import org.gradle.api.Project
  */
 class ItPluginExtension {
 
-	public static final String NAME = 'it'
+	@PackageScope
+	static final String NAME = 'it'
 
 	String srcDir = 'src/it/java'
 	String resourcesDir = "src/it/resources"
+	boolean markAsTestSources = true
 
 	@PackageScope
 	OptionsExtension optionsExtension = new OptionsExtension()
 
-	private Project project
+	private final Project project
 
 	ItPluginExtension(Project project) {
 		this.project = project
