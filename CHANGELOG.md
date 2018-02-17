@@ -34,3 +34,9 @@
 
 1. Fixed configurations initialization during source set creation
 2. Fixed source set not extending from main and test
+
+# 0.1.5
+
+## Features
+
+1. Added **markAsTestSources** boolean parameter to mark **it** directory as test sources in IntelliJ IDEA (enabled by default)

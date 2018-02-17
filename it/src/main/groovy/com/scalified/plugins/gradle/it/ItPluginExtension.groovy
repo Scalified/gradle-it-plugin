@@ -40,6 +40,7 @@ class ItPluginExtension {
 
 	String srcDir = 'src/it/java'
 	String resourcesDir = "src/it/resources"
+	boolean markAsTestSources = true
 
 	@PackageScope
 	OptionsExtension optionsExtension = new OptionsExtension()

@@ -21,7 +21,7 @@ Build script snippet for plugins DSL for Gradle 2.1 and later:
 
 ```gradle
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.4"
+  id "com.scalified.plugins.gradle.it" version "0.1.5"
 }
 ```
 
@@ -35,7 +35,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.4"
+    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.5"
   }
 }
 
@@ -50,7 +50,7 @@ After applying the plugin, the following takes place:
 2. New directories are created (if missing):
    * Source set directory for integration tests (the value of **it.srcDir** property, which is **src/it/java** by default)
    * Resources directory for integration tests (the value of **it.resourcesDir** property, which is **src/it/resources** by default)
-3. Source set directory for integration tests marked as generated source directory (IntelliJ IDEA only)
+3. Source set directory for integration tests marked as test source directory (IntelliJ IDEA only)
 4. Gradle configurations added:
    * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
    * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
@@ -64,6 +64,7 @@ Currently the following configuration parameters supported (default values are s
 it {
   srcDir = 'src/it/java' // integration test source set directory
   resourcesDir = "src/it/resources" // integration test resources directory
+  markAsTestSources = true // marks integration test source directory as test sources (IntelliJ IDEA only)
 
   options {
     maxParallelForks = 4 // maximum number of forks for integration tests execution
@@ -71,8 +72,10 @@ it {
   }
 }
 
-tasks.it.finalizedBy(cleanDb) // assuming there is some 'cleanDb' task
+tasks.it.finalizedBy(cleanDb) // assuming there is some cleanDb task
 ```
+
+> **markAsTestSources** parameter allows to control whether integration test directory will be marked as test sources in IntelliJ IDEA. In some cases it may prevent incorrect module and dependency handling in IntelliJ IDEA
 
 If you need more configuration options, you may <a href="mailto:info@scalified.com?subject=[Gradle Integration Test Plugin]: Proposals And Suggestions">send a request</a> with description
 

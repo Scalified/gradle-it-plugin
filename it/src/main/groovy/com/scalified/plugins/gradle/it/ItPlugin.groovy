@@ -89,12 +89,14 @@ class ItPlugin implements Plugin<Project> {
 		create(extension.srcDir)
 		create(extension.resourcesDir)
 
-		if (!project.plugins.hasPlugin(IdeaPlugin)) {
-			project.plugins.apply(IdeaPlugin)
-			LOGGER.debug("Applied IDEA plugin")
+		if (extension.markAsTestSources) {
+			if (!project.plugins.hasPlugin(IdeaPlugin)) {
+				project.plugins.apply(IdeaPlugin)
+				LOGGER.debug("Applied IDEA plugin")
+			}
+			def ideaModule = project.idea.module as IdeaModule
+			ideaModule.testSourceDirs += project.file(extension.srcDir)
 		}
-		def ideaModule = project.idea.module as IdeaModule
-		ideaModule.testSourceDirs += project.file(extension.srcDir)
 	}
 
 	private def configureSourceSet(ItPluginExtension extension) {
