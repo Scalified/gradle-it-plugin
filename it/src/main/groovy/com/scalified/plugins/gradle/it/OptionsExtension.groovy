@@ -25,6 +25,8 @@
 
 package com.scalified.plugins.gradle.it
 
+import groovy.transform.PackageScope
+
 /**
  * @author shell
  * @version 1.0.0
@@ -32,7 +34,18 @@ package com.scalified.plugins.gradle.it
  */
 class OptionsExtension {
 
-	Long maxParallelForks = 4
-	String maxHeapSize = '256m'
+	private static final String MAX_HEAP_SIZE = '256m'
+
+	private static final int MAX_PARALLEL_FORKS = 4
+
+	@Delegate
+	private final ItTask task
+
+	@PackageScope
+	OptionsExtension(ItTask task) {
+		this.task = task
+		setMaxHeapSize(MAX_HEAP_SIZE)
+		setMaxParallelForks(MAX_PARALLEL_FORKS)
+	}
 
 }
