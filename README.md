@@ -21,7 +21,7 @@ Build script snippet for plugins DSL for Gradle 2.1 and later:
 
 ```gradle
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.5"
+  id "com.scalified.plugins.gradle.it" version "0.1.6"
 }
 ```
 
@@ -35,7 +35,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.5"
+    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.6"
   }
 }
 
@@ -58,8 +58,6 @@ After applying the plugin, the following takes place:
 
 ## Configuration
 
-Currently the following configuration parameters supported (default values are shown):
-
 ```gradle
 it {
   srcDir = 'src/it/java' // integration test source set directory
@@ -67,8 +65,11 @@ it {
   markAsTestSources = true // marks integration test source directory as test sources (IntelliJ IDEA only)
 
   options {
-    maxParallelForks = 4 // maximum number of forks for integration tests execution
-    maxHeapSize = '256m' // maximum size of a heap for integration tests execution
+    maxParallelForks = 4
+    maxHeapSize = '256m'
+    useJUnitPlatform()
+
+    // any other test options (all options inherited from test ones)
   }
 }
 
@@ -76,8 +77,6 @@ tasks.it.finalizedBy(cleanDb) // assuming there is some cleanDb task
 ```
 
 > **markAsTestSources** parameter allows to control whether integration test directory will be marked as test sources in IntelliJ IDEA. In some cases it may prevent incorrect module and dependency handling in IntelliJ IDEA
-
-If you need more configuration options, you may <a href="mailto:info@scalified.com?subject=[Gradle Integration Test Plugin]: Proposals And Suggestions">send a request</a> with description
 
 ## License
 

@@ -28,10 +28,8 @@ package com.scalified.plugins.gradle.it
 import groovy.transform.PackageScope
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.testing.Test
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.plugins.ide.idea.model.IdeaModule
 import org.slf4j.Logger
@@ -60,11 +58,11 @@ class ItPlugin implements Plugin<Project> {
 			project.plugins.apply(JavaPlugin)
 		}
 
-		project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
-		LOGGER.debug("Created $ItPluginExtension.NAME extension")
-
 		project.tasks.create(ItTask.NAME, ItTask)
 		LOGGER.debug("Created $ItTask.NAME task")
+
+		project.extensions.create(ItPluginExtension.NAME, ItPluginExtension, project)
+		LOGGER.debug("Created $ItPluginExtension.NAME extension")
 
 		project.sourceSets.create(SOURCE_SET_NAME)
 		LOGGER.debug("Created $SOURCE_SET_NAME source set")
@@ -74,7 +72,7 @@ class ItPlugin implements Plugin<Project> {
 			createDirectories(extension)
 			configureSourceSet(extension)
 			configureConfiguration()
-			configureTask(extension)
+			configureTask()
 		}
 	}
 
@@ -126,12 +124,8 @@ class ItPlugin implements Plugin<Project> {
 		LOGGER.debug("Configured $sourceSet.runtimeConfigurationName configuration")
 	}
 
-	private def configureTask(ItPluginExtension extension) {
+	private def configureTask() {
 		def task = project.tasks[ItTask.NAME] as ItTask
-
-		populateTaskProperties(task, extension.optionsExtension)
-
-		LOGGER.info("TASK HEAP = ${(task as Test).maxHeapSize}")
 
 		task.dependsOn(project.tasks.findByName('itClasses'))
 
@@ -139,16 +133,6 @@ class ItPlugin implements Plugin<Project> {
 		task.classpath = sourceSet.runtimeClasspath
 		task.testClassesDirs = sourceSet.output.classesDirs
 		LOGGER.trace("Created and configured '${ItTask.NAME}' task")
-	}
-
-	private static def populateTaskProperties(Task task, OptionsExtension extension) {
-		OptionsExtension.declaredFields.findAll { !it.synthetic } collect { it.name } each { key ->
-			if (task.hasProperty(key)) {
-				def value = extension.properties[key]
-				task[key] = value
-				LOGGER.trace("Set '$value' value to '$key' property")
-			}
-		}
 	}
 
 }

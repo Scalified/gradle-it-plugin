@@ -1,16 +1,25 @@
-# 0.1
+# 0.1.6
 
-## Initial release. Basic functionality
+* [**#4** Plugin Not Running Tests With JUnit5](https://github.com/Scalified/gradle-it-plugin/issues/4)
 
-  * Integration test directories initialization
-  * Integration test task
-  * A few configuration test options
+# 0.1.5
 
-# 0.1.1
+## Features
 
-## Fixes:
+1. Added **markAsTestSources** boolean parameter to mark **it** directory as test sources in IntelliJ IDEA (enabled by default)
 
-1. Issue when plugin is not applying
+# 0.1.4
+
+## Fixes
+
+1. Fixed configurations initialization during source set creation
+2. Fixed source set not extending from main and test
+
+# 0.1.3
+
+## New functionality
+
+1. Added check whether IdeaPlugin is already applied
 
 # 0.1.2
 
@@ -22,21 +31,16 @@
 
 1. Added JavaPlugin automatically applying if not applied
 
-# 0.1.3
+# 0.1.1
 
-## New functionality
+## Fixes:
 
-1. Added check whether IdeaPlugin is already applied
+1. Issue when plugin is not applying
 
-# 0.1.4
+# 0.1
 
-## Fixes
+## Initial release. Basic functionality
 
-1. Fixed configurations initialization during source set creation
-2. Fixed source set not extending from main and test
-
-# 0.1.5
-
-## Features
-
-1. Added **markAsTestSources** boolean parameter to mark **it** directory as test sources in IntelliJ IDEA (enabled by default)
+  * Integration test directories initialization
+  * Integration test task
+  * A few configuration test options

@@ -43,16 +43,18 @@ class ItPluginExtension {
 	boolean markAsTestSources = true
 
 	@PackageScope
-	OptionsExtension optionsExtension = new OptionsExtension()
+	OptionsExtension optionsExtension
 
 	private final Project project
 
 	ItPluginExtension(Project project) {
 		this.project = project
+		def task = project.tasks[ItTask.NAME] as ItTask
+		this.optionsExtension = new OptionsExtension(task)
 	}
 
 	OptionsExtension options(Closure closure) {
-		optionsExtension = project.configure(new OptionsExtension(), closure) as OptionsExtension
+		optionsExtension = project.configure(optionsExtension, closure) as OptionsExtension
 	}
 
 }
