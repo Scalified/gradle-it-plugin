@@ -1,3 +1,7 @@
+# 0.1.7
+
+* [**#6** Source Sets Does Not Contain Test Classpath](https://github.com/Scalified/gradle-it-plugin/issues/6)
+
 # 0.1.6
 
 * [**#4** Plugin Not Running Tests With JUnit5](https://github.com/Scalified/gradle-it-plugin/issues/4)

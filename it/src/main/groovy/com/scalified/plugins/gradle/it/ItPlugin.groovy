@@ -103,8 +103,8 @@ class ItPlugin implements Plugin<Project> {
 		def mainSourceSet = project.sourceSets[SourceSet.MAIN_SOURCE_SET_NAME] as SourceSet
 		def testSourceSet = project.sourceSets[SourceSet.TEST_SOURCE_SET_NAME] as SourceSet
 
-		sourceSet.compileClasspath += mainSourceSet.output + testSourceSet.output
-		sourceSet.runtimeClasspath += mainSourceSet.output + testSourceSet.output
+		sourceSet.compileClasspath += mainSourceSet.output + testSourceSet.compileClasspath + testSourceSet.output
+		sourceSet.runtimeClasspath += mainSourceSet.output + testSourceSet.runtimeClasspath + testSourceSet.output
 
 		sourceSet.java.setSrcDirs(project.files(extension.srcDir))
 		sourceSet.resources.setSrcDirs(project.files(extension.resourcesDir))
