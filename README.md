@@ -21,7 +21,7 @@ Build script snippet for plugins DSL for Gradle 2.1 and later:
 
 ```gradle
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.6"
+  id "com.scalified.plugins.gradle.it" version "$version"
 }
 ```
 
@@ -35,7 +35,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.6"
+    classpath "gradle.plugin.com.scalified.plugins.gradle:it:$version"
   }
 }
 
