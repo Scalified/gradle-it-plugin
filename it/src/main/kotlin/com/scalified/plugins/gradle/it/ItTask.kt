@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-allprojects {
+package com.scalified.plugins.gradle.it
 
-	group = 'com.scalified.plugins.gradle'
-	version = '0.1.8'
+import org.gradle.api.tasks.testing.Test
 
-	repositories {
-		mavenCentral()
+/**
+ * @author shell
+ * @since 2019-10-08
+ */
+internal const val IT_TASK_NAME = "it"
+
+open class ItTask : Test() {
+
+	init {
+		group = IT_PLUGIN_GROUP
+		description = IT_PLUGIN_DESCRIPTION
 	}
 
 }

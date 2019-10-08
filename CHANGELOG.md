@@ -1,3 +1,7 @@
+# 0.1.9
+
+
+
 # 0.1.8
 
 * [**#8** Version 0.1.7 Is Not Downloadable](https://github.com/Scalified/gradle-it-plugin/issues/8)

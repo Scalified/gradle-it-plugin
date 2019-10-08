@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package com.scalified.plugins.gradle.it
+allprojects {
 
-import groovy.transform.PackageScope
-import org.gradle.api.tasks.testing.Test
+	group = "com.scalified.plugins.gradle"
+	version = "1.0.0"
 
-/**
- * @author shell
- * @version 1.0.0
- * @since 1.0.0
- */
-class ItTask extends Test {
-
-	@PackageScope
-	static final String NAME = 'it'
-
-	@PackageScope
-	static final String GROUP = 'verification'
-
-	@PackageScope
-	static final String DESCRIPTION = 'Runs the integration tests'
-
-	ItTask() {
-		group = GROUP
-		description = DESCRIPTION
+	repositories {
+		mavenCentral()
 	}
 
 }

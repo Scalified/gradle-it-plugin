@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,42 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.scalified.plugins.gradle.it
 
-import groovy.transform.PackageScope
+import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
 
 /**
  * @author shell
- * @version 1.0.0
- * @since 1.0.0
+ * @since 2019-10-08
  */
-class OptionsExtension {
+internal const val IT_PLUGIN_EXTENSION_NAME = "it"
 
-	private static final String MAX_HEAP_SIZE = '256m'
+internal const val MAX_HEAP_SIZE = "256m"
 
-	private static final int MAX_PARALLEL_FORKS = 4
+internal const val MAX_PARALLEL_FORKS = 4
 
-	@Delegate
-	private final ItTask task
+open class ItPluginExtension(private val project: Project) {
 
-	@PackageScope
-	OptionsExtension(ItTask task) {
-		this.task = task
-		setMaxHeapSize(MAX_HEAP_SIZE)
-		setMaxParallelForks(MAX_PARALLEL_FORKS)
+	init {
+		val task = project.tasks.getByName(IT_TASK_NAME) as ItTask
+		task.maxHeapSize = MAX_HEAP_SIZE
+		task.maxParallelForks = MAX_PARALLEL_FORKS
 	}
 
+	var srcDir = "src/$IT_PLUGIN_NAME/java"
+
+	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
+
+	var markAsTestSources = true
+
 }
+
+internal val Project.sourceSets: SourceSetContainer
+	get() = (this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer
+
+internal fun Project.sourceSet(name: String): SourceSet = project.sourceSets.getByName(name) as SourceSet
