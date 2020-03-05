@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,42 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.scalified.plugins.gradle.it
 
-import groovy.transform.PackageScope
-import org.gradle.api.tasks.testing.Test
+import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
 
 /**
  * @author shell
- * @version 1.0.0
- * @since 1.0.0
+ * @since 2019-10-08
  */
-class ItTask extends Test {
+internal const val IT_PLUGIN_EXTENSION_NAME = "it"
 
-	@PackageScope
-	static final String NAME = 'it'
+internal const val MAX_HEAP_SIZE = "256m"
 
-	@PackageScope
-	static final String GROUP = 'verification'
+internal const val MAX_PARALLEL_FORKS = 4
 
-	@PackageScope
-	static final String DESCRIPTION = 'Runs the integration tests'
+open class ItPluginExtension(project: Project) {
 
-	ItTask() {
-		group = GROUP
-		description = DESCRIPTION
+	init {
+		val task = project.tasks.getByName(IT_TASK_NAME) as ItTask
+		task.maxHeapSize = MAX_HEAP_SIZE
+		task.maxParallelForks = MAX_PARALLEL_FORKS
 	}
 
+	var srcDir = "src/$IT_PLUGIN_NAME/java"
+
+	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
+
+	var markAsTestSources = true
+
 }
+
+internal val Project.sourceSets: SourceSetContainer
+	get() = (this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer
+
+internal fun Project.sourceSet(name: String): SourceSet = project.sourceSets.getByName(name) as SourceSet

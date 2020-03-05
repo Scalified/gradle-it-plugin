@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package com.scalified.plugins.gradle.it
+plugins {
+	kotlin("jvm") version "1.3.70"
 
-import groovy.transform.PackageScope
+	id("com.gradle.plugin-publish") version "0.10.1"
+	`java-gradle-plugin`
+}
 
-/**
- * @author shell
- * @version 1.0.0
- * @since 1.0.0
- */
-class OptionsExtension {
+pluginBundle {
+	website = "https://scalified.com/"
+	vcsUrl = "https://github.com/Scalified/gradle-it-plugin"
+	description = "Gradle Integration Test Plugin"
+	tags = setOf("it", "integration test", "test", "integration", "intTest")
 
-	private static final String MAX_HEAP_SIZE = '256m'
-
-	private static final int MAX_PARALLEL_FORKS = 4
-
-	@Delegate
-	private final ItTask task
-
-	@PackageScope
-	OptionsExtension(ItTask task) {
-		this.task = task
-		setMaxHeapSize(MAX_HEAP_SIZE)
-		setMaxParallelForks(MAX_PARALLEL_FORKS)
+	plugins {
+		create("itPlugin") {
+			id = "com.scalified.plugins.gradle.it"
+			displayName = "Gradle Integration Test Plugin"
+			version = "${project.version}"
+		}
 	}
-
 }

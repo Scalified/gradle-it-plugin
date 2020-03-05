@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Scalified
+ * Copyright (c) 2019 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,41 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package com.scalified.plugins.gradle.it
+rootProject.name = "gradle-it-plugin"
 
-import groovy.transform.PackageScope
-import org.gradle.api.Project
-
-/**
- * @author shell
- * @version 1.0.0
- * @since 1.0.0
- */
-class ItPluginExtension {
-
-	@PackageScope
-	static final String NAME = 'it'
-
-	String srcDir = 'src/it/java'
-	String resourcesDir = "src/it/resources"
-	boolean markAsTestSources = true
-
-	@PackageScope
-	OptionsExtension optionsExtension
-
-	private final Project project
-
-	ItPluginExtension(Project project) {
-		this.project = project
-		def task = project.tasks[ItTask.NAME] as ItTask
-		this.optionsExtension = new OptionsExtension(task)
-	}
-
-	OptionsExtension options(Closure closure) {
-		optionsExtension = project.configure(optionsExtension, closure) as OptionsExtension
-	}
-
-}
+include("it")
