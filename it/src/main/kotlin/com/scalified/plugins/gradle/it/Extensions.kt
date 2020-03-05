@@ -39,7 +39,7 @@ internal const val MAX_HEAP_SIZE = "256m"
 
 internal const val MAX_PARALLEL_FORKS = 4
 
-open class ItPluginExtension(private val project: Project) {
+open class ItPluginExtension(project: Project) {
 
 	init {
 		val task = project.tasks.getByName(IT_TASK_NAME) as ItTask

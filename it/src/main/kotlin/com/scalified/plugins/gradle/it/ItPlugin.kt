@@ -107,13 +107,13 @@ open class ItPlugin : Plugin<Project> {
 		val sourceSet = project.sourceSet(SOURCE_SET_NAME)
 		val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME)
 
-		project.configurations.getByName(sourceSet.compileConfigurationName)
-				.extendsFrom(project.configurations.getByName(testSourceSet.compileConfigurationName))
-		logger.debug("Configured ${sourceSet.compileConfigurationName} configuration")
+		project.configurations.getByName(sourceSet.implementationConfigurationName)
+				.extendsFrom(project.configurations.getByName(testSourceSet.implementationConfigurationName))
+		logger.debug("Configured ${sourceSet.implementationConfigurationName} configuration")
 
-		project.configurations.getByName(sourceSet.runtimeConfigurationName)
-				.extendsFrom(project.configurations.getByName(testSourceSet.runtimeConfigurationName))
-		logger.debug("Configured ${sourceSet.runtimeConfigurationName} configuration")
+		project.configurations.getByName(sourceSet.runtimeOnlyConfigurationName)
+				.extendsFrom(project.configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
+		logger.debug("Configured ${sourceSet.runtimeOnlyConfigurationName} configuration")
 	}
 
 	private fun configureTask(project: Project) {

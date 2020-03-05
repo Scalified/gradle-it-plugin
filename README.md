@@ -8,8 +8,7 @@
 
 ## Requirements
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-* [Gradle 4+](https://gradle.org/)
+* [Gradle 6+](https://gradle.org/)
 
 ## Changelog
 
@@ -17,29 +16,29 @@
 
 ## Applying
 
-Build script snippet for plugins DSL for Gradle 2.1 and later:
+Using the plugins DSL (Kotlin):
 
-```gradle
+```kotlin
 plugins {
-  id "com.scalified.plugins.gradle.it" version "0.1.8"
+  id("com.scalified.plugins.gradle.it") version "$version"
 }
 ```
 
-Build script snippet for use in older Gradle versions or where dynamic configuration is required:
+Using legacy plugin application (Kotlin):
 
-```gradle
+```kotlin
 buildscript {
   repositories {
     maven {
-      url "https://plugins.gradle.org/m2/"
+      url = uri("https://plugins.gradle.org/m2/")
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.scalified.plugins.gradle:it:0.1.8"
+    classpath("gradle.plugin.com.scalified.plugins.gradle:it:$version")
   }
 }
 
-apply plugin: "com.scalified.plugins.gradle.it"
+apply(plugin = "com.scalified.plugins.gradle.it")
 ```
 
 ## Usage
@@ -52,28 +51,19 @@ After applying the plugin, the following takes place:
    * Resources directory for integration tests (the value of **it.resourcesDir** property, which is **src/it/resources** by default)
 3. Source set directory for integration tests marked as test source directory (IntelliJ IDEA only)
 4. Gradle configurations added:
-   * **itCompile** - configuration for integration test compile scope (depends on **testCompile**)
-   * **itRuntime** - configuration for integration test runtime scope (depends on **testRuntime**)
+   * **itCompile** - configuration for integration test compile scope (contains **implementation** classpath)
+   * **itRuntime** - configuration for integration test runtime scope (contains **testRuntimeOnly** classpath)
 5. Gradle **it** task created, which runs integration tests located in integration test source set
 
-## Configuration
+## Configuration (Kotlin)
 
-```gradle
-it {
-  srcDir = 'src/it/java' // integration test source set directory
-  resourcesDir = "src/it/resources" // integration test resources directory
-  markAsTestSources = true // marks integration test source directory as test sources (IntelliJ IDEA only)
-
-  options {
-    maxParallelForks = 4
-    maxHeapSize = '256m'
-    useJUnitPlatform()
-
-    // any other test options (all options inherited from test ones)
-  }
+```kotlin
+configure<ItPluginExtension> {
+  srcDir = "src/it/java"
+  resourcesDir = "src/it/resources"
+  markAsTestSources = true
 }
-
-tasks.it.finalizedBy(cleanDb) // assuming there is some cleanDb task
+tasks.getByName("it").finalizedBy("cleanDb") // assuming there is some cleanDb task
 ```
 
 > **markAsTestSources** parameter allows to control whether integration test directory will be marked as test sources in IntelliJ IDEA. In some cases it may prevent incorrect module and dependency handling in IntelliJ IDEA
@@ -83,7 +73,7 @@ tasks.it.finalizedBy(cleanDb) // assuming there is some cleanDb task
 ```
 MIT License
 
-Copyright (c) 2018 Scalified
+Copyright (c) 2019 Scalified
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

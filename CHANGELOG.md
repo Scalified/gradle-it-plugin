@@ -1,6 +1,10 @@
-# 0.1.9
+# 1.1.0
 
+* [**#10** Gradle 6 Update](https://github.com/Scalified/gradle-it-plugin/issues/10)
 
+# 1.0.0
+
+* [**#9** java.lang.ClassNotFoundException: org.gradle.api.internal.tasks.ContextAwareTaskAction](https://github.com/Scalified/gradle-it-plugin/issues/9)
 
 # 0.1.8
 
