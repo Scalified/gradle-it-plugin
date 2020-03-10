@@ -1,6 +1,7 @@
 # Gradle Integration Test Plugin
 
 [![Build Status](https://travis-ci.org/Scalified/gradle-it-plugin.svg)](https://travis-ci.org/Scalified/gradle-it-plugin)
+[![Maven Central](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fscalified%2Fplugins%2Fgradle%2Fit%2Fcom.scalified.plugins.gradle.it.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/com.scalified.plugins.gradle.it)
 
 ## Description
 
