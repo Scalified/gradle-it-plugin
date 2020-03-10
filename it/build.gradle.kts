@@ -34,12 +34,16 @@ pluginBundle {
 	vcsUrl = "https://github.com/Scalified/gradle-it-plugin"
 	description = "Gradle Integration Test Plugin"
 	tags = setOf("it", "integration test", "test", "integration", "intTest")
+}
 
+gradlePlugin {
 	plugins {
-		create("itPlugin") {
+		create("IT Plugin") {
 			id = "com.scalified.plugins.gradle.it"
 			displayName = "Gradle Integration Test Plugin"
-			version = "${project.version}"
+			description = "Gradle Integration Test Plugin"
+			implementationClass = "com.scalified.plugins.gradle.it.ItPlugin"
+			version = project.version
 		}
 	}
 }

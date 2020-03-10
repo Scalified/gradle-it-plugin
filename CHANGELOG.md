@@ -1,3 +1,11 @@
+# 2.0.0
+
+* [**#13** Api Configuration Changes](https://github.com/Scalified/gradle-it-plugin/issues/13)
+
+# 1.1.1
+
+* [**#12** Gradle Script Update](https://github.com/Scalified/gradle-it-plugin/issues/12)
+
 # 1.1.0
 
 * [**#10** Gradle 6 Update](https://github.com/Scalified/gradle-it-plugin/issues/10)

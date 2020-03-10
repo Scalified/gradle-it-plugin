@@ -33,28 +33,6 @@ import org.gradle.api.tasks.SourceSetContainer
  * @author shell
  * @since 2019-10-08
  */
-internal const val IT_PLUGIN_EXTENSION_NAME = "it"
-
-internal const val MAX_HEAP_SIZE = "256m"
-
-internal const val MAX_PARALLEL_FORKS = 4
-
-open class ItPluginExtension(project: Project) {
-
-	init {
-		val task = project.tasks.getByName(IT_TASK_NAME) as ItTask
-		task.maxHeapSize = MAX_HEAP_SIZE
-		task.maxParallelForks = MAX_PARALLEL_FORKS
-	}
-
-	var srcDir = "src/$IT_PLUGIN_NAME/java"
-
-	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
-
-	var markAsTestSources = true
-
-}
-
 internal val Project.sourceSets: SourceSetContainer
 	get() = (this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer
 

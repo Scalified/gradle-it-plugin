@@ -24,6 +24,7 @@
 
 package com.scalified.plugins.gradle.it
 
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.testing.Test
 
 /**
@@ -32,11 +33,24 @@ import org.gradle.api.tasks.testing.Test
  */
 internal const val IT_TASK_NAME = "it"
 
+internal const val MAX_HEAP_SIZE = "256m"
+
+internal const val MAX_PARALLEL_FORKS = 4
+
 open class ItTask : Test() {
 
 	init {
 		group = IT_PLUGIN_GROUP
 		description = IT_PLUGIN_DESCRIPTION
 	}
+
+	@Input
+	var srcDir = "src/$IT_PLUGIN_NAME/java"
+
+	@Input
+	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
+
+	@Input
+	var markAsTestSources = true
 
 }

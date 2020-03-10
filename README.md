@@ -55,13 +55,15 @@ After applying the plugin, the following takes place:
    * **itRuntime** - configuration for integration test runtime scope (contains **testRuntimeOnly** classpath)
 5. Gradle **it** task created, which runs integration tests located in integration test source set
 
-## Configuration (Kotlin)
+## Configuration
 
 ```kotlin
-configure<ItPluginExtension> {
-  srcDir = "src/it/java"
-  resourcesDir = "src/it/resources"
-  markAsTestSources = true
+it {
+    srcDir = 'src/it/kotlin'
+    resourcesDir = "src/it/resources"
+    useJUnitPlatform()
+    maxParallelForks = 4
+    markAsTestSources = true
 }
 tasks.getByName("it").finalizedBy("cleanDb") // assuming there is some cleanDb task
 ```
