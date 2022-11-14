@@ -23,16 +23,15 @@
  */
 
 plugins {
-	kotlin("jvm") version "1.3.70"
+	kotlin("jvm") version "1.7.21"
 
-	id("com.gradle.plugin-publish") version "0.10.1"
-	`java-gradle-plugin`
+	id("com.gradle.plugin-publish") version "1.1.0"
 }
 
 pluginBundle {
 	website = "https://scalified.com/"
-	vcsUrl = "https://github.com/Scalified/gradle-it-plugin"
-	description = "Gradle Integration Test Plugin"
+	vcsUrl = "${project.properties["PROJECT_URL"]}"
+	description = "${project.properties["PROJECT_DESCRIPTION"]}"
 	tags = setOf("it", "integration test", "test", "integration", "intTest")
 }
 
@@ -40,8 +39,8 @@ gradlePlugin {
 	plugins {
 		create("IT Plugin") {
 			id = "com.scalified.plugins.gradle.it"
-			displayName = "Gradle Integration Test Plugin"
-			description = "Gradle Integration Test Plugin"
+			displayName = "${project.properties["PROJECT_NAME"]}"
+			description = "${project.properties["PROJECT_DESCRIPTION"]}"
 			implementationClass = "com.scalified.plugins.gradle.it.ItPlugin"
 			version = project.version
 		}

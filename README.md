@@ -1,6 +1,6 @@
 # Gradle Integration Test Plugin
 
-[![Build Status](https://travis-ci.org/Scalified/gradle-it-plugin.svg)](https://travis-ci.org/Scalified/gradle-it-plugin)
+[![Build Status](https://github.com/Scalified/gradle-it-plugin/actions/workflows/gradle.yml/badge.svg)](https://github.com/Scalified/gradle-it-plugin/actions)
 [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fscalified%2Fplugins%2Fgradle%2Fit%2Fcom.scalified.plugins.gradle.it.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/com.scalified.plugins.gradle.it)
 
 ## Description
@@ -9,7 +9,7 @@
 
 ## Requirements
 
-* [Gradle 6+](https://gradle.org/)
+* [Gradle 7+](https://gradle.org/)
 
 ## Changelog
 
