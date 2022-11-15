@@ -28,7 +28,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
-import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.slf4j.LoggerFactory
 
 /**
@@ -60,13 +59,10 @@ open class ItPlugin : Plugin<Project> {
 		project.sourceSets.create(SOURCE_SET_NAME)
 		logger.debug("Created $SOURCE_SET_NAME source set")
 
-		project.afterEvaluate {
-			createDirectories(it, task)
-			configureSourceSet(it, task)
-			configureConfiguration(it)
-			configureTask(it)
-			markTestDirectories(it, task)
-		}
+		createDirectories(project, task)
+		configureSourceSet(project, task)
+		configureConfiguration(project)
+		configureTask(project)
 	}
 
 	private fun createDirectories(project: Project, task: ItTask) {
@@ -88,11 +84,11 @@ open class ItPlugin : Plugin<Project> {
 		val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME)
 
 		sourceSet.compileClasspath = sourceSet.compileClasspath.plus(mainSourceSet.output)
-				.plus(testSourceSet.compileClasspath)
-				.plus(testSourceSet.output)
+			.plus(testSourceSet.compileClasspath)
+			.plus(testSourceSet.output)
 		sourceSet.runtimeClasspath = sourceSet.runtimeClasspath.plus(mainSourceSet.output)
-				.plus(testSourceSet.runtimeClasspath)
-				.plus(testSourceSet.output)
+			.plus(testSourceSet.runtimeClasspath)
+			.plus(testSourceSet.output)
 
 		sourceSet.java.setSrcDirs(project.files(task.srcDir))
 		sourceSet.resources.setSrcDirs(project.files(task.resourcesDir))
@@ -104,11 +100,11 @@ open class ItPlugin : Plugin<Project> {
 		val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME)
 
 		project.configurations.getByName(sourceSet.implementationConfigurationName)
-				.extendsFrom(project.configurations.getByName(testSourceSet.implementationConfigurationName))
+			.extendsFrom(project.configurations.getByName(testSourceSet.implementationConfigurationName))
 		logger.debug("Configured ${sourceSet.implementationConfigurationName} configuration")
 
 		project.configurations.getByName(sourceSet.runtimeOnlyConfigurationName)
-				.extendsFrom(project.configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
+			.extendsFrom(project.configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
 		logger.debug("Configured ${sourceSet.runtimeOnlyConfigurationName} configuration")
 	}
 
@@ -123,20 +119,6 @@ open class ItPlugin : Plugin<Project> {
 		task.maxHeapSize = MAX_HEAP_SIZE
 		task.maxParallelForks = MAX_PARALLEL_FORKS
 		logger.debug("Configured $IT_TASK_NAME task")
-	}
-
-	private fun markTestDirectories(project: Project, task: ItTask) {
-		if (task.markAsTestSources) {
-			if (!project.plugins.hasPlugin(IdeaPlugin::class.java)) {
-				project.plugins.apply(IdeaPlugin::class.java)
-				logger.debug("Applied Idea Plugin")
-			}
-
-			project.plugins.getPlugin(IdeaPlugin::class.java).model.module.apply {
-				testSourceDirs = testSourceDirs.plus(project.file(task.srcDir))
-				logger.debug("Configured ${task.srcDir} as test sources directory")
-			}
-		}
 	}
 
 }
