@@ -1,3 +1,7 @@
+# 2.4.1
+
+* [**#15** Idea SourceSets Missing Main](https://github.com/Scalified/gradle-it-plugin/issues/15)
+
 # 2.0.0
 
 * [**#13** Api Configuration Changes](https://github.com/Scalified/gradle-it-plugin/issues/13)

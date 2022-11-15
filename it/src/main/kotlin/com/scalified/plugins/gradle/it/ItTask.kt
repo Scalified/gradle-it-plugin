@@ -50,7 +50,4 @@ open class ItTask : Test() {
 	@Input
 	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
 
-	@Input
-	var markAsTestSources = true
-
 }
