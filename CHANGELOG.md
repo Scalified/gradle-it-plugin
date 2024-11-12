@@ -1,3 +1,5 @@
+# 3.1.0
+
 # 3.0.0
 
 * [#16 Gradle Upgrade](https://github.com/Scalified/gradle-it-plugin/issues/16)
