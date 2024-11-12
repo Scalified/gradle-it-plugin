@@ -24,6 +24,7 @@
 
 package com.scalified.plugins.gradle.it
 
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.testing.Test
 
@@ -39,15 +40,19 @@ internal const val MAX_PARALLEL_FORKS = 4
 
 open class ItTask : Test() {
 
-	init {
-		group = IT_PLUGIN_GROUP
-		description = IT_PLUGIN_DESCRIPTION
-	}
+    init {
+        group = IT_PLUGIN_GROUP
+        description = IT_PLUGIN_DESCRIPTION
+    }
 
-	@Input
-	var srcDir = "src/$IT_PLUGIN_NAME/java"
+    @Input
+    var srcDir = "src/$IT_PLUGIN_NAME/java"
 
-	@Input
-	var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
+    @Input
+    var resourcesDir = "src/$IT_PLUGIN_NAME/resources"
+
+    @Suppress("UnstableApiUsage")
+    override fun getDryRun(): Property<Boolean> =
+        project.objects.property(Boolean::class.java).apply { convention(false) }
 
 }

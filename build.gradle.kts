@@ -24,8 +24,8 @@
 
 allprojects {
 
-	group = "com.scalified.plugins.gradle"
-	version = "2.4.1"
+	group = "com.scalified"
+	version = rootProject.libs.versions.project.get()
 
 	repositories {
 		mavenCentral()

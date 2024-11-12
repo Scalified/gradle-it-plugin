@@ -1,3 +1,7 @@
+# 3.0.0
+
+* [#16 Gradle Upgrade](https://github.com/Scalified/gradle-it-plugin/issues/16)
+
 # 2.4.1
 
 * [**#15** Idea SourceSets Missing Main](https://github.com/Scalified/gradle-it-plugin/issues/15)

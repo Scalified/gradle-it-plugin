@@ -36,4 +36,4 @@ import org.gradle.api.tasks.SourceSetContainer
 internal val Project.sourceSets: SourceSetContainer
 	get() = (this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer
 
-internal fun Project.sourceSet(name: String): SourceSet = project.sourceSets.getByName(name) as SourceSet
+internal fun Project.sourceSet(name: String): SourceSet = project.sourceSets.getByName(name)

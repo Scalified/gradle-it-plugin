@@ -23,26 +23,23 @@
  */
 
 plugins {
-	kotlin("jvm") version "1.7.21"
+	`kotlin-dsl`
 
-	id("com.gradle.plugin-publish") version "1.1.0"
-}
-
-pluginBundle {
-	website = "https://scalified.com/"
-	vcsUrl = "${project.properties["PROJECT_URL"]}"
-	description = "${project.properties["PROJECT_DESCRIPTION"]}"
-	tags = setOf("it", "integration test", "test", "integration", "intTest")
+	alias(libs.plugins.gradle.publish)
 }
 
 gradlePlugin {
 	plugins {
+		@Suppress("UnstableApiUsage")
 		create("IT Plugin") {
 			id = "com.scalified.plugins.gradle.it"
 			displayName = "${project.properties["PROJECT_NAME"]}"
 			description = "${project.properties["PROJECT_DESCRIPTION"]}"
 			implementationClass = "com.scalified.plugins.gradle.it.ItPlugin"
 			version = project.version
+			website.set("https://scalified.com/")
+			vcsUrl.set("${project.properties["PROJECT_URL"]}")
+			tags.set(setOf("it", "integration test", "test", "integration", "intTest"))
 		}
 	}
 }

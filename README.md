@@ -1,6 +1,7 @@
 # Gradle Integration Test Plugin
 
-[![Build Status](https://github.com/Scalified/gradle-it-plugin/actions/workflows/gradle.yml/badge.svg)](https://github.com/Scalified/gradle-it-plugin/actions)
+[![Build Status](https://github.com/Scalified/gradle-proguard-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/Scalified/gradle-proguard-plugin/actions)
+[![Build Status](https://github.com/Scalified/gradle-it-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/Scalified/gradle-it-plugin/actions)
 [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fscalified%2Fplugins%2Fgradle%2Fit%2Fcom.scalified.plugins.gradle.it.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/com.scalified.plugins.gradle.it)
 
 ## Description
@@ -9,7 +10,7 @@
 
 ## Requirements
 
-* [Gradle 7+](https://gradle.org/)
+* [Gradle 8+](https://gradle.org/)
 
 ## Changelog
 
@@ -21,25 +22,8 @@ Using the plugins DSL (Kotlin):
 
 ```kotlin
 plugins {
-  id("com.scalified.plugins.gradle.it") version "$version"
+    id("com.scalified.plugins.gradle.it") version "$VERSION"
 }
-```
-
-Using legacy plugin application (Kotlin):
-
-```kotlin
-buildscript {
-  repositories {
-    maven {
-      url = uri("https://plugins.gradle.org/m2/")
-    }
-  }
-  dependencies {
-    classpath("gradle.plugin.com.scalified.plugins.gradle:it:$version")
-  }
-}
-
-apply(plugin = "com.scalified.plugins.gradle.it")
 ```
 
 ## Usage
@@ -59,7 +43,7 @@ After applying the plugin, the following takes place:
 
 ```kotlin
 it {
-    srcDir = 'src/it/kotlin'
+    srcDir = "src/it/kotlin"
     resourcesDir = "src/it/resources"
     useJUnitPlatform()
     maxParallelForks = 4
