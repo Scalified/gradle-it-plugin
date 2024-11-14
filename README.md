@@ -31,24 +31,27 @@ plugins {
 After applying the plugin, the following takes place:
 
 1. JavaPlugin applied if not yet applied
-2. New directories are created (if missing):
-   * Source set directory for integration tests (the value of **it.srcDir** property, which is **src/it/java** by default)
-   * Resources directory for integration tests (the value of **it.resourcesDir** property, which is **src/it/resources** by default)
-3. Gradle configurations added:
-   * **itImplementation** - configuration for integration test compile scope (contains **implementation** classpath)
-   * **itRuntimeOnly** - configuration for integration test runtime scope (contains **testRuntimeOnly** classpath)
-4. Gradle **it** task created, which runs integration tests located in integration test source set
+2. IdeaPlugin applied if not yet applied
+3. New directories are created (if missing):
+   * Source set directory for integration tests (`src/it/java` by default)
+   * Resources directory for integration tests (`src/it/resources` by default)
+4. Gradle configurations added:
+   * `itImplementation` - configuration for integration test compile scope (contains `implementation` classpath)
+   * `itRuntimeOnly` - configuration for integration test runtime scope (contains `testRuntimeOnly` classpath)
+   * `it*` - other configurations inherited from `Test` (e.g. `itAnnotationProcessor`)
+5. Gradle `it` task created, which runs integration tests located within the integration test source set
+6. Integration test sources directory marked as test sources in **IntelliJ IDEA**
 
 ## Configuration
 
 ```kotlin
-it {
+tasks.it {
     srcDir = "src/it/kotlin"
     resourcesDir = "src/it/resources"
     useJUnitPlatform()
     maxParallelForks = 4
 }
-tasks.getByName("it").finalizedBy("cleanDb") // assuming there is some cleanDb task
+tasks.it.finalizedBy(tasks.cleanDb) // assuming there is some cleanDb task
 ```
 
 ## License
