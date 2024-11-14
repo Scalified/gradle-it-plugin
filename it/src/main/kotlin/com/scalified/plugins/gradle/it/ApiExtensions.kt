@@ -25,15 +25,34 @@
 package com.scalified.plugins.gradle.it
 
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.TaskContainer
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.getPlugin
+import org.gradle.plugins.ide.idea.IdeaPlugin
 
 /**
  * @author shell
  * @since 2019-10-08
  */
-internal val Project.sourceSets: SourceSetContainer
-	get() = (this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer
+internal val Project.ideaPlugin
+    get() = plugins.getPlugin(IdeaPlugin::class)
 
-internal fun Project.sourceSet(name: String): SourceSet = project.sourceSets.getByName(name)
+internal val Project.sourceSets: SourceSetContainer
+    get() = extensions.getByType<SourceSetContainer>()
+
+internal val TaskContainer.itClasses
+    get() = named("itClasses")
+
+internal fun Project.sourceSet(name: String): Provider<SourceSet> = project.sourceSets.named(name)
+
+internal fun Project.createMissingDirectories(paths: Set<String>) {
+    paths.map(this::file).forEach { file ->
+        if (!file.exists()) {
+            file.mkdirs()
+            logger.debug("Created '${file.absolutePath}' directory")
+        }
+    }
+}

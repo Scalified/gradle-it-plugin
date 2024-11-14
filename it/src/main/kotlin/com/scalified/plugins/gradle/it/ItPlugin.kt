@@ -28,97 +28,69 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.hasPlugin
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
+import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.slf4j.LoggerFactory
 
 /**
  * @author shell
  * @since 2019-10-08
  */
-internal const val IT_PLUGIN_NAME = "it"
-
-internal const val IT_PLUGIN_GROUP = "verification"
-
-internal const val IT_PLUGIN_DESCRIPTION = "Runs the integration tests"
-
-private const val SOURCE_SET_NAME = "it"
-
 open class ItPlugin : Plugin<Project> {
 
-	private val logger = LoggerFactory.getLogger(ItPlugin::class.java)
+    private val logger = LoggerFactory.getLogger(ItPlugin::class.java)
 
-	override fun apply(project: Project) {
+    override fun apply(project: Project) {
 
-		if (!project.plugins.hasPlugin(JavaPlugin::class.java)) {
-			project.plugins.apply(JavaPlugin::class.java)
-			logger.debug("Applied Java Plugin")
-		}
+        listOf(JavaPlugin::class, IdeaPlugin::class).filterNot(project.plugins::hasPlugin).forEach { type ->
+            project.plugins.apply(type)
+            logger.info("Applied '${type.simpleName}' plugin")
+        }
 
-		val task = project.tasks.create(IT_TASK_NAME, ItTask::class.java)
-		logger.debug("Created $IT_TASK_NAME task")
+        project.tasks.register<ItTask>(IT)
+        project.sourceSets.register(IT)
 
-		project.sourceSets.create(SOURCE_SET_NAME)
-		logger.debug("Created $SOURCE_SET_NAME source set")
+        project.afterEvaluate {
+            tasks.named<ItTask>(IT) {
+                createMissingDirectories(setOf(srcDir.get(), resourcesDir.get()))
 
-		createDirectories(project, task)
-		configureSourceSet(project, task)
-		configureConfiguration(project)
-		configureTask(project)
-	}
+                sourceSets.named(IT) {
+                    val mainSourceSet = project.sourceSet(SourceSet.MAIN_SOURCE_SET_NAME).get()
+                    val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME).get()
 
-	private fun createDirectories(project: Project, task: ItTask) {
-		fun create(path: String) {
-			val dir = project.file(path)
-			if (!dir.exists()) {
-				dir.mkdirs()
-				logger.debug("Created ${dir.absolutePath} directory")
-			}
-		}
-		create(task.srcDir)
-		create(task.resourcesDir)
-	}
+                    compileClasspath = compileClasspath.plus(mainSourceSet.output)
+                        .plus(testSourceSet.compileClasspath)
+                        .plus(testSourceSet.output)
+                    runtimeClasspath = runtimeClasspath.plus(mainSourceSet.output)
+                        .plus(testSourceSet.runtimeClasspath)
+                        .plus(testSourceSet.output)
 
-	private fun configureSourceSet(project: Project, task: ItTask) {
-		val sourceSet = project.sourceSet(SOURCE_SET_NAME)
+                    project.configurations.named(implementationConfigurationName) {
+                        extendsFrom(project.configurations.named(testSourceSet.implementationConfigurationName).get())
+                    }
+                    project.configurations.named(runtimeOnlyConfigurationName) {
+                        extendsFrom(project.configurations.named(testSourceSet.runtimeOnlyConfigurationName).get())
+                    }
 
-		val mainSourceSet = project.sourceSet(SourceSet.MAIN_SOURCE_SET_NAME)
-		val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME)
+                    java.setSrcDirs(files(srcDir.get()))
+                    resources.setSrcDirs(files(resourcesDir.get()))
+                    classpath = runtimeClasspath
+                    testClassesDirs = output.classesDirs
+                    maxHeapSize = MAX_HEAP_SIZE
+                    maxParallelForks = MAX_PARALLEL_FORKS
 
-		sourceSet.compileClasspath = sourceSet.compileClasspath.plus(mainSourceSet.output)
-			.plus(testSourceSet.compileClasspath)
-			.plus(testSourceSet.output)
-		sourceSet.runtimeClasspath = sourceSet.runtimeClasspath.plus(mainSourceSet.output)
-			.plus(testSourceSet.runtimeClasspath)
-			.plus(testSourceSet.output)
+                    logger.debug("SourceSet '$IT' configured")
+                }
 
-		sourceSet.java.setSrcDirs(project.files(task.srcDir))
-		sourceSet.resources.setSrcDirs(project.files(task.resourcesDir))
-		logger.debug("Configured $SOURCE_SET_NAME source set")
-	}
+                dependsOn(tasks.itClasses)
 
-	private fun configureConfiguration(project: Project) {
-		val sourceSet = project.sourceSet(SOURCE_SET_NAME)
-		val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME)
-
-		project.configurations.getByName(sourceSet.implementationConfigurationName)
-			.extendsFrom(project.configurations.getByName(testSourceSet.implementationConfigurationName))
-		logger.debug("Configured ${sourceSet.implementationConfigurationName} configuration")
-
-		project.configurations.getByName(sourceSet.runtimeOnlyConfigurationName)
-			.extendsFrom(project.configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
-		logger.debug("Configured ${sourceSet.runtimeOnlyConfigurationName} configuration")
-	}
-
-	private fun configureTask(project: Project) {
-		val task = project.tasks.getByName(IT_TASK_NAME) as ItTask
-
-		task.dependsOn(project.tasks.findByName("itClasses"))
-
-		val sourceSet = project.sourceSet(SOURCE_SET_NAME)
-		task.classpath = sourceSet.runtimeClasspath
-		task.testClassesDirs = sourceSet.output.classesDirs
-		task.maxHeapSize = MAX_HEAP_SIZE
-		task.maxParallelForks = MAX_PARALLEL_FORKS
-		logger.debug("Configured $IT_TASK_NAME task")
-	}
+                project.ideaPlugin.model.module.testSources.from(srcDir)
+                logger.debug("Task '$IT' configured")
+            }
+        }
+    }
 
 }

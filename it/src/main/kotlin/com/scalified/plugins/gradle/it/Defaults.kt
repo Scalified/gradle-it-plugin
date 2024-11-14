@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 Scalified
+ * Copyright (c) 2024 Scalified
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,16 @@
 
 package com.scalified.plugins.gradle.it
 
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.testing.Test
+internal const val IT = "it"
 
-/**
- * @author shell
- * @since 2019-10-08
- */
-abstract class ItTask : Test() {
+internal const val GROUP = "verification"
 
-    @get:Input
-    abstract val srcDir: Property<String>
+internal const val DESCRIPTION = "Runs the integration tests"
 
-    @get:Input
-    abstract val resourcesDir: Property<String>
+internal const val MAX_HEAP_SIZE = "256m"
 
-    init {
-        group = GROUP
-        description = DESCRIPTION
+internal const val MAX_PARALLEL_FORKS = 4
 
-        srcDir.convention(SRC_DIR)
-        resourcesDir.convention(RESOURCES_DIR)
-    }
+internal const val SRC_DIR = "src/$IT/java"
 
-}
+internal const val RESOURCES_DIR = "src/$IT/resources"
