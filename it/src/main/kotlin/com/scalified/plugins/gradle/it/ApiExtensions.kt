@@ -25,10 +25,14 @@
 package com.scalified.plugins.gradle.it
 
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.plugins.ExtensionContainer
+import org.gradle.api.plugins.PluginContainer
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.getPlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
@@ -37,16 +41,16 @@ import org.gradle.plugins.ide.idea.IdeaPlugin
  * @author shell
  * @since 2019-10-08
  */
-internal val Project.ideaPlugin
-    get() = plugins.getPlugin(IdeaPlugin::class)
+internal val PluginContainer.idea: IdeaPlugin
+    get() = getPlugin(IdeaPlugin::class)
 
-internal val Project.sourceSets: SourceSetContainer
-    get() = extensions.getByType<SourceSetContainer>()
+internal val ExtensionContainer.sourceSets: SourceSetContainer
+    get() = getByType<SourceSetContainer>()
 
-internal val TaskContainer.itClasses
+internal val TaskContainer.itClasses: TaskProvider<Task>
     get() = named("itClasses")
 
-internal fun Project.sourceSet(name: String): Provider<SourceSet> = project.sourceSets.named(name)
+internal fun ExtensionContainer.sourceSet(name: String): Provider<SourceSet> = sourceSets.named(name)
 
 internal fun Project.createMissingDirectories(paths: Set<String>) {
     paths.map(this::file).forEach { file ->

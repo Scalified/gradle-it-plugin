@@ -1,4 +1,6 @@
-# 3.1.0
+# 3.3.0
+
+* [#18 Refactoring](https://github.com/Scalified/gradle-it-plugin/issues/18)
 
 # 3.0.0
 

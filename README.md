@@ -50,8 +50,9 @@ tasks.it {
     resourcesDir = "src/it/resources"
     useJUnitPlatform()
     maxParallelForks = 4
+
+    finalizedBy(tasks.cleanDb) // assuming there is some cleanDb task
 }
-tasks.it.finalizedBy(tasks.cleanDb) // assuming there is some cleanDb task
 ```
 
 ## License

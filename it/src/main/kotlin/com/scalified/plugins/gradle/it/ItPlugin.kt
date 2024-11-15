@@ -51,15 +51,15 @@ open class ItPlugin : Plugin<Project> {
         }
 
         project.tasks.register<ItTask>(IT)
-        project.sourceSets.register(IT)
+        project.extensions.sourceSets.register(IT)
 
         project.afterEvaluate {
             tasks.named<ItTask>(IT) {
                 createMissingDirectories(setOf(srcDir.get(), resourcesDir.get()))
 
-                sourceSets.named(IT) {
-                    val mainSourceSet = project.sourceSet(SourceSet.MAIN_SOURCE_SET_NAME).get()
-                    val testSourceSet = project.sourceSet(SourceSet.TEST_SOURCE_SET_NAME).get()
+                extensions.sourceSets.named(IT) {
+                    val mainSourceSet = extensions.sourceSet(SourceSet.MAIN_SOURCE_SET_NAME).get()
+                    val testSourceSet = extensions.sourceSet(SourceSet.TEST_SOURCE_SET_NAME).get()
 
                     compileClasspath = compileClasspath.plus(mainSourceSet.output)
                         .plus(testSourceSet.compileClasspath)
@@ -67,6 +67,7 @@ open class ItPlugin : Plugin<Project> {
                     runtimeClasspath = runtimeClasspath.plus(mainSourceSet.output)
                         .plus(testSourceSet.runtimeClasspath)
                         .plus(testSourceSet.output)
+                    logger.debug("Configured '$IT' classpath")
 
                     project.configurations.named(implementationConfigurationName) {
                         extendsFrom(project.configurations.named(testSourceSet.implementationConfigurationName).get())
@@ -74,6 +75,7 @@ open class ItPlugin : Plugin<Project> {
                     project.configurations.named(runtimeOnlyConfigurationName) {
                         extendsFrom(project.configurations.named(testSourceSet.runtimeOnlyConfigurationName).get())
                     }
+                    logger.debug("Configured '$IT' configurations")
 
                     java.setSrcDirs(files(srcDir.get()))
                     resources.setSrcDirs(files(resourcesDir.get()))
@@ -82,12 +84,14 @@ open class ItPlugin : Plugin<Project> {
                     maxHeapSize = MAX_HEAP_SIZE
                     maxParallelForks = MAX_PARALLEL_FORKS
 
-                    logger.debug("SourceSet '$IT' configured")
+                    logger.debug("Configured '$IT' source sets")
                 }
 
                 dependsOn(tasks.itClasses)
 
-                project.ideaPlugin.model.module.testSources.from(srcDir)
+                project.plugins.idea.model.module.testSources.from(srcDir)
+                logger.debug("Marked '${srcDir.get()}' as an IDEA test sources directory")
+
                 logger.debug("Task '$IT' configured")
             }
         }
