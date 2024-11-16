@@ -1,3 +1,7 @@
+# 3.4.0
+
+* [#19 Extension of type 'SourceSetContainer' does not exist](https://github.com/Scalified/gradle-it-plugin/issues/19)
+
 # 3.3.0
 
 * [#18 Refactoring](https://github.com/Scalified/gradle-it-plugin/issues/18)
