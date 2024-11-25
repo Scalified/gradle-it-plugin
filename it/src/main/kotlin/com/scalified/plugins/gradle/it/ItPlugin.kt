@@ -56,6 +56,7 @@ open class ItPlugin : Plugin<Project> {
         project.afterEvaluate {
             tasks.named<ItTask>(IT) {
                 createMissingDirectories(setOf(srcDir.get(), resourcesDir.get()))
+                outputs.upToDateWhen { false }
 
                 project.extensions.sourceSets.named(IT) {
                     val mainSourceSet = project.extensions.sourceSet(SourceSet.MAIN_SOURCE_SET_NAME).get()

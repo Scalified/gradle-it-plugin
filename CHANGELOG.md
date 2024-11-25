@@ -1,3 +1,7 @@
+# 3.4.2
+
+* [#20 Do not reuse previous outputs](https://github.com/Scalified/gradle-it-plugin/issues/20)
+
 # 3.4.0
 
 * [#19 Extension of type 'SourceSetContainer' does not exist](https://github.com/Scalified/gradle-it-plugin/issues/19)
