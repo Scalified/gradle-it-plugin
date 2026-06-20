@@ -22,24 +22,32 @@
  * SOFTWARE.
  */
 
-plugins {
-	`kotlin-dsl`
+package com.scalified.plugins.gradle.it
 
-	alias(libs.plugins.gradle.publish)
-}
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.testing.Test
+import org.gradle.work.DisableCachingByDefault
 
-gradlePlugin {
-	plugins {
-		@Suppress("UnstableApiUsage")
-		create("IT Plugin") {
-			id = "com.scalified.plugins.gradle.it"
-			displayName = "${project.properties["PROJECT_NAME"]}"
-			description = "${project.properties["PROJECT_DESCRIPTION"]}"
-			implementationClass = "com.scalified.plugins.gradle.it.ItPlugin"
-			version = project.version
-			website.set("https://scalified.com/")
-			vcsUrl.set("${project.properties["PROJECT_URL"]}")
-			tags.set(setOf("it", "integration test", "test", "integration", "intTest"))
-		}
-	}
+/**
+ * @author shell
+ * @since 2019-10-08
+ */
+@DisableCachingByDefault(because = "Integration tests should always be executed")
+abstract class ItTask : Test() {
+
+    @get:Input
+    abstract val srcDir: Property<String>
+
+    @get:Input
+    abstract val resourcesDir: Property<String>
+
+    init {
+        group = GROUP
+        description = DESCRIPTION
+
+        srcDir.convention(SRC_DIR)
+        resourcesDir.convention(RESOURCES_DIR)
+    }
+
 }

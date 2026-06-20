@@ -23,5 +23,3 @@
  */
 
 rootProject.name = "gradle-it-plugin"
-
-include("it")

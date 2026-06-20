@@ -1,3 +1,5 @@
+import org.gradle.plugin.compatibility.compatibility
+
 /*
  * MIT License
  *
@@ -21,14 +23,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+plugins {
+    `kotlin-dsl`
 
-allprojects {
+    alias(libs.plugins.gradle.publish)
+}
 
-	group = "com.scalified"
-	version = rootProject.libs.versions.project.get()
+group = "com.scalified"
+version = rootProject.libs.versions.project.get()
 
-	repositories {
-		mavenCentral()
-	}
+repositories {
+    mavenCentral()
+}
 
+gradlePlugin {
+    plugins {
+        create("IT Plugin") {
+            id = "com.scalified.plugins.gradle.it"
+            displayName = "${project.property("PROJECT_NAME")}"
+            description = "${project.property("PROJECT_DESCRIPTION")}"
+            implementationClass = "com.scalified.plugins.gradle.it.ItPlugin"
+            version = project.version
+            website.set("https://scalified.com/")
+            vcsUrl.set("${project.property("PROJECT_URL")}")
+            tags.set(setOf("it", "integration test", "test", "integration", "intTest"))
+            compatibility {
+                features {
+                    configurationCache = true
+                }
+            }
+        }
+    }
 }

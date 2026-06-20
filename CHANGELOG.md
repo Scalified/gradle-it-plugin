@@ -1,3 +1,7 @@
+# 3.5.0
+
+* [#21 Upgrade](https://github.com/Scalified/gradle-it-plugin/issues/21)
+
 # 3.4.2
 
 * [#20 Do not reuse previous outputs](https://github.com/Scalified/gradle-it-plugin/issues/20)
